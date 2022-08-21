@@ -76,3 +76,18 @@ returns:
 */
 const media = getMediaArray(0);
 console.log(media);
+
+
+
+
+
+// const PRIVATE_KEY = "0x35237c73ff1c92cf93b70e2696a110ee5da9c276243f207a7dc01b90046484e1";
+// const rinkebyProvider = ethers.getDefaultProvider("https://rinkeby.infura.io/v3/481a8d82aeb541b8925973d836c49375");
+// const signer = new ethers.Wallet(PRIVATE_KEY, rinkebyProvider);
+// const contract = new ethers.Contract(
+//     contractData.address, contractData.abi, signer
+// );
+
+// const PINATA_KEY = "be1e67a95cc77caa2d57";
+// const PINATA_SECRET = "486b3ac380e4ccd1a117da3e0c47dbbbaf87c40f10430bb8a67e01805870f31e";
+// const filePath = "img/test.png"
