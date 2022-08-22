@@ -30,7 +30,7 @@ const createAccountHash = libertee.createAccount(
 ).then(console.log);
 
 // // Check Libertee Account
-const profile = libertee.getProfileMap(address).then(console.log);
+const profile = libertee.getProfileMap(ADDRESS).then(console.log);
 
 // Direct upload to Libertee
 const ipfsHash = libertee.uploadPinata(filePath, "Yujin", PINATA_KEY, PINATA_SECRET);
@@ -41,13 +41,13 @@ const postMediaHash = libertee.postMedia(
 ).then(console.log);
 
 // Check Owner Post
-const getOwnerPost = async(address) => {
+const getOwnerPost = async(ADDRESS) => {
     const ownerMediaLength = await libertee.getOwnerMediaLength(
-        address
+        ADDRESS
     )
     for (i=0; i<ownerMediaLength; i++) {
-        const media = libertee.getMediaOwnershipMap(address, i).then(console.log);
+        const media = libertee.getMediaOwnershipMap(ADDRESS, i).then(console.log);
     }
 }
 
-getOwnerPost(address);
+getOwnerPost(ADDRESS);
