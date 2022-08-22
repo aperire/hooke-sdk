@@ -1,9 +1,14 @@
 # Libertee Protocol
 
+![alt text](https://raw.githubusercontent.com/aperire/libertee-sdk/main/lib/img/libertee.png)
 Libertee is an open-source protocol to provide
 uncensorable contents to the internet.
 
 (Currently deployed on [Ethereum Goerli Testnet]("https://goerli.etherscan.io/address/0x0b9c85d928dbb153c6c5897ec03d333e7e948a8b"))
+
+Contract Address: 0x0B9c85D928dbb153C6c5897EC03d333E7E948A8b
+
+Simulate on [Remix](https://remix.ethereum.org)
 
 ## Installation
 
