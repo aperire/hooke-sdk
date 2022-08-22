@@ -1,6 +1,7 @@
 # Libertee Protocol
 
-![alt text](https://raw.githubusercontent.com/aperire/libertee-sdk/main/lib/img/libertee.png)
+![alt text](./lib/img/libertee.png)
+
 Libertee is an open-source protocol to provide
 uncensorable contents to the internet.
 
