@@ -1,8 +1,8 @@
 {
   "name": "libertee-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
-  "main": "src/Libertee.js",
+  "main": "./lib/Libertee.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
