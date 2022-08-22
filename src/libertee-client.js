@@ -3,37 +3,41 @@ const { contractData } = require("./contract");
 const pinataSDK = require('@pinata/sdk');
 const fs = require("fs");
 
+const getSigner = (PRIVATE_KEY, GOERLI_PROVIDER) => {
+    const provider = ethers.getDefaultProvider(GOERLI_PROVIDER);
+    const signer = new ethers.Wallet(PRIVATE_KEY, provider);
+    return signer;
+}
+
 class Libertee {
     /*
     @dev Initialize Contract
     */
-    constructor(PRIVATE_KEY, PROVIDER) {
-        this.provider = ethers.getDefaultProvider(PROVIDER);
-        this.signer = new ethers.Wallet(PRIVATE_KEY, this.provider);
+    constructor(signer) {
         this.contract = new ethers.Contract(
             contractData.address,
             contractData.abi,
-            this.signer
+            signer
         );
     }
 
     /*
     @dev Upload to ipfs
     */
-    uploadPinata = async(filePath, name, PINATA_KEY, PINATA_SECRET) => {
+    uploadPinata = async(filePath, fileName, PINATA_KEY, PINATA_SECRET) => {
         const pinata = pinataSDK(PINATA_KEY, PINATA_SECRET);
         const readableStreamForFile = fs.createReadStream(filePath);
         const options = {
             pinataMetaData: {
-                name: name
+                name: fileName
             },
             pinataOptions: {
                 cidVersion: 0
             }
         };
         const result = await pinata.pinFileToIPFS(readableStreamForFile, options);
-        const hash = result.IpfsHash;
-        return hash;
+        const ipfsHash = result.IpfsHash;
+        return ipfsHash;
     }
 
     /*
@@ -179,4 +183,4 @@ class Libertee {
 
 }
 
-module.exports = { Libertee };
+module.exports = { getSigner, Libertee };

@@ -1,5 +1,5 @@
 const contractData = {
-    "address": "0xaB3Ae1EA01d4236A5fDef3AB0775d0146dF82e99",
+    "address": "0x0B9c85D928dbb153C6c5897EC03d333E7E948A8b",
     "abi": [
         {
             "inputs": [
