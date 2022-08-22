@@ -49,7 +49,7 @@ Reading data from Libertee contract allows multiple developers to create fronten
 #### Reading Posts
 
 ```
-const readMedia = async () => {
+const readMediaArray = async () => {
     // Get length of mediaArray
     const mediaArrayLength = await libertee.getMediaArrayLength();
 
@@ -61,6 +61,18 @@ const readMedia = async () => {
 ```
 
 #### Reading Account Names
+
+```
+const readAccountArray = async () => {
+    // Get length of nameArray
+    const nameArrayLength = await libertee.getNameArrayLength();
+
+    // Loop
+    for (i=0; i<nameArrayLength; i++) {
+        const account = libertee.getNameArray(i).then(console.log);
+    }
+}
+```
 
 #### Reading Profile
 
