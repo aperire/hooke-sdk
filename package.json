@@ -1,6 +1,6 @@
 {
   "name": "libertee-sdk",
-  "version": "1.3.2",
+  "version": "1.3.4",
   "description": "![alt text](https://raw.githubusercontent.com/aperire/libertee-sdk/main/lib/img/libertee.png)",
   "main": "./lib/Libertee.js",
   "scripts": {
