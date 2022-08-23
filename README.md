@@ -160,6 +160,12 @@ const readAllMediaByHashtag = async (hashTag) => {
 }
 ```
 
+#### Reading Length of User's HashTag
+
+```
+const hashTagArrayLength = libertee.getUserHashTagLength(address).then(console.log);
+```
+
 ### Writing/Transacting
 
 Do you have a content in mind which should not be censored? Upload new contents with Libertee to show the whole world without getting censored.
