@@ -62,6 +62,19 @@ contract Libertee {
         return hashTagMap[_hashTag].length;
     }
 
+    function nameExists(string memory _nickName)
+        public
+        view
+        returns (bool exists)
+    {
+        for (uint256 i = 0; i < nameArray.length; i++) {
+            if (keccak256(bytes(nameArray[i])) == keccak256(bytes(_nickName))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     function createAccount(
         string memory _pfpHash,
         string memory _nickName,
