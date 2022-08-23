@@ -1,6 +1,6 @@
 {
   "name": "libertee-sdk",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "![alt text](https://raw.githubusercontent.com/aperire/libertee-sdk/main/lib/img/libertee.png)",
   "main": "./lib/Libertee.js",
   "scripts": {
@@ -21,7 +21,12 @@
     "url": "git+https://github.com/aperire/libertee-labs.git"
   },
   "keywords": [
-    "ipfs"
+    "ipfs",
+    "ethereum",
+    "web3",
+    "pinata",
+    "ethers.js",
+    "web3.js"
   ],
   "bugs": {
     "url": "https://github.com/aperire/libertee-labs/issues"
