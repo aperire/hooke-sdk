@@ -82,6 +82,13 @@ const readAccountArray = async () => {
 }
 ```
 
+#### Validating Name Existance
+
+```
+const name = "Yujin";
+const nameExists = libertee.checkNameExists(name).then(console.log); // bool
+```
+
 #### Reading Profile from Address
 
 ```
