@@ -12,7 +12,7 @@ contract Libertee {
     struct Media {
         string ipfsHash;
         string text;
-        string[] hashTag;
+        string[] hashTagArray;
         uint256 uploadDate;
         address owner;
     }
@@ -20,13 +20,13 @@ contract Libertee {
     struct OwnerMedia {
         string ipfsHash;
         string text;
-        string[] hashTag;
+        string[] hashTagArray;
         uint256 uploadDate;
     }
 
     struct Profile {
         string pfpHash;
-        string nickName;
+        string username;
         string bio;
         string telegram;
         string twitter;
@@ -62,13 +62,21 @@ contract Libertee {
         return hashTagMap[_hashTag].length;
     }
 
-    function nameExists(string memory _nickName)
+    function getUserHashTagLength(address _user)
+        public
+        view
+        returns (uint256 length)
+    {
+        return profileMap[_user].hashTagArray.length;
+    }
+
+    function nameExists(string memory _username)
         public
         view
         returns (bool exists)
     {
         for (uint256 i = 0; i < nameArray.length; i++) {
-            if (keccak256(bytes(nameArray[i])) == keccak256(bytes(_nickName))) {
+            if (keccak256(bytes(nameArray[i])) == keccak256(bytes(_username))) {
                 return true;
             }
         }
@@ -77,7 +85,7 @@ contract Libertee {
 
     function createAccount(
         string memory _pfpHash,
-        string memory _nickName,
+        string memory _username,
         string memory _bio,
         string memory _telegram,
         string memory _twitter,
@@ -93,9 +101,9 @@ contract Libertee {
             "Account Exists!"
         );
 
-        // validate nickName
+        // validate username
         for (uint256 i = 0; i < nameArray.length; i++) {
-            if (keccak256(bytes(nameArray[i])) == keccak256(bytes(_nickName))) {
+            if (keccak256(bytes(nameArray[i])) == keccak256(bytes(_username))) {
                 return false;
             }
         }
@@ -103,7 +111,7 @@ contract Libertee {
         // create profile struct
         Profile memory profile = Profile(
             _pfpHash,
-            _nickName,
+            _username,
             _bio,
             _telegram,
             _twitter,
@@ -118,10 +126,10 @@ contract Libertee {
         profileMap[msg.sender] = profile;
 
         // add to profileNameMap
-        profileNameMap[_nickName] = profile;
+        profileNameMap[_username] = profile;
 
         // add to nameArray
-        nameArray.push(_nickName);
+        nameArray.push(_username);
 
         return true;
     }
@@ -191,13 +199,13 @@ contract Libertee {
     function postMedia(
         string memory _ipfsHash,
         string memory _text,
-        string[] memory _hashTag
+        string[] memory _hashTagArray
     ) public returns (bool success) {
         // push to mediaArray
         Media memory media = Media(
             _ipfsHash,
             _text,
-            _hashTag,
+            _hashTagArray,
             block.timestamp,
             msg.sender
         );
@@ -207,17 +215,16 @@ contract Libertee {
         OwnerMedia memory ownerMedia = OwnerMedia(
             _ipfsHash,
             _text,
-            _hashTag,
+            _hashTagArray,
             block.timestamp
         );
 
         mediaOwnershipMap[msg.sender].push(ownerMedia);
 
         // add hashtag
-        for (uint8 i = 0; i < _hashTag.length; i++) {
-            hashTagMap[_hashTag[i]].push(media);
+        for (uint8 i = 0; i < _hashTagArray.length; i++) {
+            hashTagMap[_hashTagArray[i]].push(media);
         }
-
         return true;
     }
 }

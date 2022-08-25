@@ -7,9 +7,9 @@ uncensorable contents to the internet.
 
 More info on https://libertee.xyz
 
-(Currently deployed on [Ethereum Goerli Testnet]("https://goerli.etherscan.io/address/0x2a0bf040a8c09148D3617B957468E9eA2951F159"))
+(Currently deployed on [Ethereum Goerli Testnet]("https://goerli.etherscan.io/address/0x39C997db3cfD808E23E656ecEE7220560Bd07c94"))
 
-Contract Address: 0x2a0bf040a8c09148D3617B957468E9eA2951F159
+Contract Address: 0x39C997db3cfD808E23E656ecEE7220560Bd07c94
 
 Simulate on [Remix](https://remix.ethereum.org)
 
@@ -22,7 +22,7 @@ Simulate on [Remix](https://remix.ethereum.org)
 This is the Libertee SDK to transact and build decentralized frontend
 for [Libertee Protocol]("https://libertee.xyz").
 
-### Initialize
+### Initialize Instance
 
 ```
 const { Libertee, getSigner } = require('libertee-sdk');
@@ -38,7 +38,7 @@ const signer = getSigner(PRIVATE_KEY, GOERLI_PROVIDER);
 const libertee = new Libertee(signer);
 ```
 
-### Upload file to IPFS (Pinata)
+### Upload file to IPFS (via Pinata)
 
 Upload files to IPFS with a simple script.
 
@@ -50,13 +50,33 @@ let name = "example img";
 const ipfsHash = libertee.uploadPinata(filePath, name, PINATA_KEY, PINATA_SECRET).then(console.log);
 ```
 
-### Reading
+## Reading
 
 Reading data from Libertee contract allows multiple developers to create frontend to maintain decentralization of Libertee Protocol and protect from censorship.
 
-#### Reading All Posts
+### Reading All Posts
+
+Posts are stored in a single dimension array of Media struct as follows.
 
 ```
+@solidity
+
+Media[] public mediaArray;
+
+struct Media {
+        string ipfsHash;
+        string text;
+        string[] hashTag;
+        uint256 uploadDate;
+        address owner;
+    }
+```
+
+All posts could be read as follows. Note that the last index is the most recent post.
+
+```
+@nodejs
+
 const readMediaArray = async () => {
     // Get length of mediaArray
     const mediaArrayLength = await libertee.getMediaArrayLength();
@@ -68,9 +88,21 @@ const readMediaArray = async () => {
 }
 ```
 
-#### Reading All Account Names
+### Reading All Account Names
+
+Account names are stored in a single dimension array of string as follows.
 
 ```
+@solidity
+
+string[] public nameArray;
+```
+
+All account names can be read as follows.
+
+```
+@nodejs
+
 const readAccountArray = async () => {
     // Get length of nameArray
     const nameArrayLength = await libertee.getNameArrayLength();
@@ -82,14 +114,32 @@ const readAccountArray = async () => {
 }
 ```
 
-#### Validating Name Existance
+### Validating Name Existance
+
+Account name could not be overlapped. Therefore, the following view function exists in the contract to easily validate.
 
 ```
+@solidity
+
+function nameExists(string memory _nickName) public view returns (bool exists) {
+        for (uint i=0; i<nameArray.length; i++) {
+            if (keccak256(bytes(nameArray[i]))==keccak256(bytes(_nickName))) {
+                return true;
+            }
+        }
+        return false;
+    }
+```
+
+Validation is possible by calling the function.
+
+```
+@nodejs
 const name = "Yujin";
 const nameExists = libertee.checkNameExists(name).then(console.log); // bool
 ```
 
-#### Reading Profile from Address
+### Reading Profile from Address
 
 ```
 // Use target address
@@ -98,7 +148,7 @@ const address = "0xd3A44Ce3d4eb86c966C972cBBE99473f3Cc73A96";
 const profile = libertee.getProfileMap(address).then(console.log);
 ```
 
-#### Reading Profile from Name
+### Reading Profile from Name
 
 ```
 // Use target name
@@ -107,7 +157,7 @@ const name = "Yujin"
 const profile = libertee.getProfileNameMap(name).then(console.log);
 ```
 
-#### Reading Post by Account
+### Reading Post by Account
 
 ```
 // Use target address
@@ -124,7 +174,7 @@ const readAllMediaByAccount = async(address) => {
 }
 ```
 
-#### Reading Post by Name
+### Reading Post by Name
 
 ```
 // Use target name
@@ -144,7 +194,7 @@ const readAllMediaByName = async(name) => {
 }
 ```
 
-#### Reading Post by Hashtag
+### Reading Post by Hashtag
 
 ```
 const hashTag = "yujin";
@@ -160,17 +210,17 @@ const readAllMediaByHashtag = async (hashTag) => {
 }
 ```
 
-#### Reading Length of User's HashTag
+### Reading Length of User's HashTag
 
 ```
 const hashTagArrayLength = libertee.getUserHashTagLength(address).then(console.log);
 ```
 
-### Writing/Transacting
+## Writing/Transacting
 
 Do you have a content in mind which should not be censored? Upload new contents with Libertee to show the whole world without getting censored.
 
-#### Creating Account
+### Creating Account
 
 ```
 // Obtain IPFS hash from libertee.uploadPinata
@@ -199,7 +249,7 @@ const txHash = libertee.createAccount(
 ).then(console.log);
 ```
 
-#### Creating Posts
+### Creating Posts
 
 ```
 // Obtain IPFS hash from libertee.uploadPinata
@@ -212,7 +262,7 @@ const hashTag = ["Yujin", "Kpop"];
 const txHash = libertee.postMedia(ipfsHash, text, hashTag).then(console.log);
 ```
 
-#### Editing Account
+### Editing Account
 
 ```
 // METHODS
