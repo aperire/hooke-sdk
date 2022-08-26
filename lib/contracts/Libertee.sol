@@ -15,6 +15,7 @@ contract Libertee {
         string[] hashTagArray;
         uint256 uploadDate;
         address owner;
+        string userName;
     }
 
     struct OwnerMedia {
@@ -201,13 +202,17 @@ contract Libertee {
         string memory _text,
         string[] memory _hashTagArray
     ) public returns (bool success) {
+        // Get username
+        Profile memory profile = profileMap[msg.sender];
+        string memory username = profile.username;
         // push to mediaArray
         Media memory media = Media(
             _ipfsHash,
             _text,
             _hashTagArray,
             block.timestamp,
-            msg.sender
+            msg.sender,
+            username
         );
         mediaArray.push(media);
 
