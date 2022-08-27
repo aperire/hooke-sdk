@@ -1,4 +1,4 @@
-# Libertee Protocol by Hooke Labs
+# Hooke Labs
 
 ![alt text](https://raw.githubusercontent.com/aperire/libertee-sdk/main/lib/img/libertee-banner.png)
 

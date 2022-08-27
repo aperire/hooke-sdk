@@ -1,7 +1,7 @@
 {
   "name": "hooke-sdk",
   "version": "1.0.0",
-  "description": "![alt text](https://raw.githubusercontent.com/aperire/libertee-sdk/main/lib/img/libertee.png)",
+  "description": "![alt text](https://raw.githubusercontent.com/aperire/hooke-sdk/main/lib/img/libertee.png)",
   "main": "./lib/Hooke.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,7 +18,7 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aperire/libertee-labs.git"
+    "url": "git+https://github.com/aperire/hooke-sdk.git"
   },
   "keywords": [
     "ipfs",
@@ -29,7 +29,7 @@
     "web3.js"
   ],
   "bugs": {
-    "url": "https://github.com/aperire/libertee-labs/issues"
+    "url": "https://github.com/aperire/hooke-sdk/issues"
   },
-  "homepage": "https://github.com/aperire/libertee-labs#readme"
+  "homepage": "https://github.com/aperire/hooke-sdk#readme"
 }
