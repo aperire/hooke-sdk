@@ -1,4 +1,4 @@
-# Libertee Protocol
+# Libertee Protocol by Hooke Labs
 
 ![alt text](https://raw.githubusercontent.com/aperire/libertee-sdk/main/lib/img/libertee-banner.png)
 
@@ -15,17 +15,17 @@ Simulate on [Remix](https://remix.ethereum.org)
 
 ## Installation
 
-`npm install libertee-sdk`
+`npm install @hooke-labs/libertee-sdk`
 
 ## Libertee JS SDK
 
 This is the Libertee SDK to transact and build decentralized frontend
-for [Libertee Protocol]("https://libertee.xyz").
+for [Libertee Protocol by Hooke Labs]("https://hooke.org).
 
 ### Initialize Instance
 
 ```
-const { Libertee, getSigner } = require('libertee-sdk');
+const { Libertee, getSigner } = require('@hooke-labs/libertee-sdk');
 
 // Environmental Variables
 const PINATA_KEY = process.env.PINATA_KEY;

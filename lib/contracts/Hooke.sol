@@ -1,60 +1,53 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.15;
 
-contract Libertee {
+contract Hooke {
     Media[] public mediaArray;
     string[] public nameArray;
-    mapping(address => OwnerMedia[]) public mediaOwnershipMap;
+    mapping(address => Media[]) public mediaOwnershipMap;
     mapping(address => Profile) public profileMap;
     mapping(string => Profile) public profileNameMap;
     mapping(string => Media[]) public hashTagMap; // hashTag => Media
 
     struct Media {
-        string ipfsHash;
+        string postHash;
         string text;
-        string[] hashTagArray;
         uint256 uploadDate;
         address owner;
         string userName;
-    }
-
-    struct OwnerMedia {
-        string ipfsHash;
-        string text;
-        string[] hashTagArray;
-        uint256 uploadDate;
+        string pfpHash;
     }
 
     struct Profile {
         string pfpHash;
         string username;
         string bio;
-        string telegram;
-        string twitter;
-        string phone;
-        string email;
-        string website;
         string[] hashTagArray;
         address owner;
     }
 
     // view functions
+
+    // get length of mediaArray
     function getMediaArrayLength() public view returns (uint256 length) {
         return mediaArray.length;
     }
 
+    // get length of nameArray
     function getNameArrayLength() public view returns (uint256 length) {
         return nameArray.length;
     }
 
-    function getOwnerMediaLength(address _target)
+    // get length of mediaOwnershipMap[address]
+    function getOwnerMediaLength(address _user)
         public
         view
         returns (uint256 length)
     {
-        return mediaOwnershipMap[_target].length;
+        return mediaOwnershipMap[_user].length;
     }
 
+    // get length of hashTagMap[hashTag]
     function getHashTagMediaLength(string memory _hashTag)
         public
         view
@@ -63,7 +56,8 @@ contract Libertee {
         return hashTagMap[_hashTag].length;
     }
 
-    function getUserHashTagLength(address _user)
+    // get length of profileMap[address].hashTagArray
+    function getAddressHashTagLength(address _user)
         public
         view
         returns (uint256 length)
@@ -71,6 +65,32 @@ contract Libertee {
         return profileMap[_user].hashTagArray.length;
     }
 
+    function getAddressHashTag(address _user, uint256 _index)
+        public
+        view
+        returns (string memory hashTag)
+    {
+        return profileMap[_user].hashTagArray[_index];
+    }
+
+    // get length of profileNameMap[name].hashTagArray
+    function getNameHashTagLength(string memory _name)
+        public
+        view
+        returns (uint256 length)
+    {
+        return profileNameMap[_name].hashTagArray.length;
+    }
+
+    function getNameHashTag(string memory _name, uint256 _index)
+        public
+        view
+        returns (string memory hashTag)
+    {
+        return profileNameMap[_name].hashTagArray[_index];
+    }
+
+    // loop and check if username exists
     function nameExists(string memory _username)
         public
         view
@@ -88,11 +108,6 @@ contract Libertee {
         string memory _pfpHash,
         string memory _username,
         string memory _bio,
-        string memory _telegram,
-        string memory _twitter,
-        string memory _phone,
-        string memory _email,
-        string memory _website,
         string[] memory _hashTagArray
     ) public returns (bool success) {
         // validate address
@@ -114,11 +129,6 @@ contract Libertee {
             _pfpHash,
             _username,
             _bio,
-            _telegram,
-            _twitter,
-            _phone,
-            _email,
-            _website,
             _hashTagArray,
             msg.sender
         );
@@ -151,41 +161,6 @@ contract Libertee {
         return true;
     }
 
-    function editTelegram(string memory _telegram)
-        public
-        returns (bool success)
-    {
-        require(profileMap[msg.sender].owner == msg.sender, "Create Account!");
-
-        Profile storage profile = profileMap[msg.sender];
-        profile.telegram = _telegram;
-        return true;
-    }
-
-    function editTwitter(string memory _twitter) public returns (bool success) {
-        require(profileMap[msg.sender].owner == msg.sender, "Create Account!");
-
-        Profile storage profile = profileMap[msg.sender];
-        profile.twitter = _twitter;
-        return true;
-    }
-
-    function editPhone(string memory _phone) public returns (bool success) {
-        require(profileMap[msg.sender].owner == msg.sender, "Create Account!");
-
-        Profile storage profile = profileMap[msg.sender];
-        profile.phone = _phone;
-        return true;
-    }
-
-    function editEmail(string memory _email) public returns (bool success) {
-        require(profileMap[msg.sender].owner == msg.sender, "Create Account!");
-
-        Profile storage profile = profileMap[msg.sender];
-        profile.email = _email;
-        return true;
-    }
-
     function editHashTagArray(string[] memory _hashTagArray)
         public
         returns (bool success)
@@ -198,33 +173,27 @@ contract Libertee {
     }
 
     function postMedia(
-        string memory _ipfsHash,
+        string memory _postHash,
         string memory _text,
         string[] memory _hashTagArray
     ) public returns (bool success) {
         // Get username
         Profile memory profile = profileMap[msg.sender];
         string memory username = profile.username;
+        string memory pfpHash = profile.pfpHash;
         // push to mediaArray
         Media memory media = Media(
-            _ipfsHash,
+            _postHash,
             _text,
-            _hashTagArray,
             block.timestamp,
             msg.sender,
-            username
+            username,
+            pfpHash
         );
         mediaArray.push(media);
 
         // add to mediaOwnershipMap
-        OwnerMedia memory ownerMedia = OwnerMedia(
-            _ipfsHash,
-            _text,
-            _hashTagArray,
-            block.timestamp
-        );
-
-        mediaOwnershipMap[msg.sender].push(ownerMedia);
+        mediaOwnershipMap[msg.sender].push(media);
 
         // add hashtag
         for (uint8 i = 0; i < _hashTagArray.length; i++) {
