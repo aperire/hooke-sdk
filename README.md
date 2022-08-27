@@ -1,6 +1,6 @@
-# Hooke Labs
+# Hooke Labs SDK
 
-![alt text](https://raw.githubusercontent.com/aperire/libertee-sdk/main/lib/img/libertee-banner.png)
+![alt text](https://raw.githubusercontent.com/aperire/hooke-sdk/main/lib/img/libertee-banner.png)
 
 Libertee is an open-source protocol to provide
 uncensorable contents to the internet.
