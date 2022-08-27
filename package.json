@@ -1,6 +1,6 @@
 {
   "name": "hooke-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "![alt text](https://raw.githubusercontent.com/aperire/hooke-sdk/main/lib/img/libertee.png)",
   "main": "./lib/Hooke.js",
   "scripts": {
