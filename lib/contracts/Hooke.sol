@@ -5,7 +5,7 @@ contract Hooke {
     Media[] public mediaArray;
     string[] public nameArray;
     mapping(address => Media[]) public mediaOwnershipMap;
-    mapping(address => Profile) public profileMap;
+    mapping(address => string) public addressToName;
     mapping(string => Profile) public profileNameMap;
     mapping(string => Media[]) public hashTagMap; // hashTag => Media
 
@@ -56,13 +56,13 @@ contract Hooke {
         return hashTagMap[_hashTag].length;
     }
 
-    // get length of profileMap[address].hashTagArray
+    // get number of tags of an account
     function getAddressHashTagLength(address _user)
         public
         view
         returns (uint256 length)
     {
-        return profileMap[_user].hashTagArray.length;
+        return profileNameMap[addressToName[_user]].hashTagArray.length;
     }
 
     function getAddressHashTag(address _user, uint256 _index)
@@ -70,7 +70,7 @@ contract Hooke {
         view
         returns (string memory hashTag)
     {
-        return profileMap[_user].hashTagArray[_index];
+        return profileNameMap[addressToName[_user]].hashTagArray[_index];
     }
 
     // get length of profileNameMap[name].hashTagArray
@@ -112,7 +112,7 @@ contract Hooke {
     ) public returns (bool success) {
         // validate address
         require(
-            profileMap[msg.sender].owner ==
+            profileNameMap[addressToName[msg.sender]].owner ==
                 0x0000000000000000000000000000000000000000,
             "Account Exists!"
         );
@@ -133,8 +133,8 @@ contract Hooke {
             msg.sender
         );
 
-        // add to profileMap
-        profileMap[msg.sender] = profile;
+        // add to addressToName
+        addressToName[msg.sender] = _username;
 
         // add to profileNameMap
         profileNameMap[_username] = profile;
@@ -146,17 +146,17 @@ contract Hooke {
     }
 
     function editPfpHash(string memory _pfpHash) public returns (bool success) {
-        require(profileMap[msg.sender].owner == msg.sender, "Create Account!");
+        require(profileNameMap[addressToName[msg.sender]].owner == msg.sender, "Create Account!");
 
-        Profile storage profile = profileMap[msg.sender];
+        Profile storage profile = profileNameMap[addressToName[msg.sender]];
         profile.pfpHash = _pfpHash;
         return true;
     }
 
     function editBio(string memory _bio) public returns (bool success) {
-        require(profileMap[msg.sender].owner == msg.sender, "Create Account!");
+        require(profileNameMap[addressToName[msg.sender]].owner == msg.sender, "Create Account!");
 
-        Profile storage profile = profileMap[msg.sender];
+        Profile storage profile = profileNameMap[addressToName[msg.sender]];
         profile.bio = _bio;
         return true;
     }
@@ -165,9 +165,9 @@ contract Hooke {
         public
         returns (bool success)
     {
-        require(profileMap[msg.sender].owner == msg.sender, "Create Account!");
+        require(profileNameMap[addressToName[msg.sender]].owner == msg.sender, "Create Account!");
 
-        Profile storage profile = profileMap[msg.sender];
+        Profile storage profile = profileNameMap[addressToName[msg.sender]];
         profile.hashTagArray = _hashTagArray;
         return true;
     }
@@ -178,8 +178,8 @@ contract Hooke {
         string[] memory _hashTagArray
     ) public returns (bool success) {
         // Get username
-        Profile memory profile = profileMap[msg.sender];
-        string memory username = profile.username;
+        Profile memory profile = profileNameMap[addressToName[msg.sender]];
+        string memory username = addressToName[msg.sender];
         string memory pfpHash = profile.pfpHash;
         // push to mediaArray
         Media memory media = Media(
