@@ -3,11 +3,10 @@ pragma solidity ^0.8.15;
 
 contract Hooke {
     Media[] public mediaArray;
-    string[] public nameArray;
-    mapping(address => Media[]) public mediaOwnershipMap;
-    mapping(address => string) public addressToName;
-    mapping(string => Profile) public profileNameMap;
-    mapping(string => Media[]) public hashTagMap; // hashTag => Media
+    mapping(string => bool) public nameMap;
+    mapping(address => string) public addressToName;    //address => username
+    mapping(string => Profile) public profileNameMap;   //username => profile
+    mapping(string => Media[]) public hashTagMap;       // hashTag => Media
 
     struct Media {
         string postHash;
@@ -17,13 +16,14 @@ contract Hooke {
         string userName;
         string pfpHash;
     }
-
     struct Profile {
         string pfpHash;
         string username;
         string bio;
         string[] hashTagArray;
         address owner;
+        mapping(uint=>Media) ownedMedia;
+        uint numOfMedia;
     }
 
     // view functions
@@ -38,18 +38,13 @@ contract Hooke {
         return mediaArray.length;
     }
 
-    // get length of nameArray
-    function getNameArrayLength() public view returns (uint256 length) {
-        return nameArray.length;
-    }
-
-    // get length of mediaOwnershipMap[address]
-    function getOwnerMediaLength(address _user)
+    // get length of ownedMedia from address
+    function getOwnedMediaLength(address _user)
         public
         view
         returns (uint256 length)
     {
-        return mediaOwnershipMap[_user].length;
+        return profileNameMap[addressToName[_user]].numOfMedia;
     }
 
     // get length of hashTagMap[hashTag]
@@ -101,12 +96,7 @@ contract Hooke {
         view
         returns (bool exists)
     {
-        for (uint256 i = 0; i < nameArray.length; i=unsafe_inc(i)) {
-            if (keccak256(bytes(nameArray[i])) == keccak256(bytes(_username))) {
-                return true;
-            }
-        }
-        return false;
+        return nameMap[_username];
     }
 
     function createAccount(
@@ -115,6 +105,7 @@ contract Hooke {
         string memory _bio,
         string[] memory _hashTagArray
     ) public returns (bool success) {
+        Media memory nullMedia;
         // validate address
         require(
             profileNameMap[addressToName[msg.sender]].owner ==
@@ -123,11 +114,7 @@ contract Hooke {
         );
 
         // validate username
-        for (uint256 i = 0; i < nameArray.length; i=unsafe_inc(i)) {
-            if (keccak256(bytes(nameArray[i])) == keccak256(bytes(_username))) {
-                return false;
-            }
-        }
+        require(nameMap[_username]!=true, "Username Exists!");
 
         // create profile struct
         Profile memory profile = Profile(
@@ -135,7 +122,9 @@ contract Hooke {
             _username,
             _bio,
             _hashTagArray,
-            msg.sender
+            msg.sender,
+            nullMedia,
+            0
         );
 
         // add to addressToName
@@ -145,7 +134,7 @@ contract Hooke {
         profileNameMap[_username] = profile;
 
         // add to nameArray
-        nameArray.push(_username);
+        nameMap[_username]=true;
 
         return true;
     }
@@ -196,9 +185,9 @@ contract Hooke {
             pfpHash
         );
         mediaArray.push(media);
-
-        // add to mediaOwnershipMap
-        mediaOwnershipMap[msg.sender].push(media);
+        
+        // add to ownedMedia
+        profileNameMap[addressToName[msg.sender]].ownedMedia.push(media);
 
         // add hashtag
         for (uint256 i = 0; i < _hashTagArray.length; i=unsafe_inc(i)) {
