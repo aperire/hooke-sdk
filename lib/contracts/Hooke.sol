@@ -22,8 +22,7 @@ contract Hooke {
         string bio;
         string[] hashTagArray;
         address owner;
-        mapping(uint=>Media) ownedMedia;
-        uint numOfMedia;
+        uint[] mediaIndexArray;
     }
 
     // view functions
@@ -38,13 +37,13 @@ contract Hooke {
         return mediaArray.length;
     }
 
-    // get length of ownedMedia from address
+    // get length of mediaIndexArray from address
     function getOwnedMediaLength(address _user)
         public
         view
         returns (uint256 length)
     {
-        return profileNameMap[addressToName[_user]].numOfMedia;
+        return profileNameMap[addressToName[_user]].mediaIndexArray.length;
     }
 
     // get length of hashTagMap[hashTag]
@@ -105,7 +104,6 @@ contract Hooke {
         string memory _bio,
         string[] memory _hashTagArray
     ) public returns (bool success) {
-        Media memory nullMedia;
         // validate address
         require(
             profileNameMap[addressToName[msg.sender]].owner ==
@@ -117,15 +115,13 @@ contract Hooke {
         require(nameMap[_username]!=true, "Username Exists!");
 
         // create profile struct
-        Profile memory profile = Profile(
-            _pfpHash,
-            _username,
-            _bio,
-            _hashTagArray,
-            msg.sender,
-            nullMedia,
-            0
-        );
+        Profile memory profile;
+        profile.pfpHash=_pfpHash;
+        profile.username=_username;
+        profile.bio=_bio;
+        profile.hashTagArray=_hashTagArray;
+        profile.owner=msg.sender;
+
 
         // add to addressToName
         addressToName[msg.sender] = _username;
@@ -186,8 +182,8 @@ contract Hooke {
         );
         mediaArray.push(media);
         
-        // add to ownedMedia
-        profileNameMap[addressToName[msg.sender]].ownedMedia.push(media);
+        // add to mediaIndexArray
+        profileNameMap[addressToName[msg.sender]].mediaIndexArray.push(mediaArray.length);
 
         // add hashtag
         for (uint256 i = 0; i < _hashTagArray.length; i=unsafe_inc(i)) {
